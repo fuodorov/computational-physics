@@ -1,118 +1,168 @@
 import numpy as np
 
 
-def get_machine_epsilon(eps: np.float32 | np.float64) -> np.float32 | np.float64:
+class FloatingTypeError(TypeError):
+    message: str = "The given floating point type must be either np.float32 or np.float64."
+
+    def __init__(self, message: str = message):
+        super().__init__(message)
+
+
+def get_machine_epsilon(number_type: np.floating) -> np.floating:
     """Get the machine epsilon for a given floating point type.
 
     Args:
-        eps (np.float32|np.float64): The floating point type to get the machine epsilon for.
+        number_type (np.float32|np.float64): The floating point type to get the machine epsilon for.
 
     Returns:
         np.float32|np.float64: The machine epsilon for the given floating point type.
+
+    Raises:
+        FloatingTypeError: If the given floating point type is not np.float32 or np.float64.
+
+    Doctests:
+        >>> get_machine_epsilon(np.float32) == np.finfo(np.float32).eps
+        True
+        >>> get_machine_epsilon(np.float64) == np.finfo(np.float64).eps
+        True
+        >>> get_machine_epsilon(np.float128) == np.finfo(np.float128).eps
+        True
     """
 
-    # Initialize the machine epsilon to 1.0
-    machine_epsilon = eps(1.0)
+    if not isinstance(number_type(1.0), np.floating):
+        raise FloatingTypeError()
 
-    # While the machine epsilon plus the machine epsilon divided by 2.0 is greater than the machine epsilon
-    while eps(1.0) + machine_epsilon / eps(2.0) > eps(1.0):
-        # Divide the machine epsilon by 2.0
-        machine_epsilon /= eps(2.0)
+    machine_epsilon = number_type(1.0)
 
-    # Return the machine epsilon
-    return machine_epsilon
+    while number_type(1.0) + machine_epsilon > number_type(1.0):
+        machine_epsilon /= number_type(2.0)
+
+    return machine_epsilon * number_type(2.0)
 
 
-def get_number_of_significant_digits(eps: np.float32 | np.float64) -> int:
-    """Get the number of significant digits for a given floating point type.
+def get_number_of_mantissa_bits(number_type: np.floating) -> int:
+    """Get the number of mantissa bits for a given floating point type.
 
     Args:
-        eps (np.float32|np.float64): The floating point type to get the number of significant digits for.
+        number_type (np.float32|np.float64): The floating point type to get the number of mantissa bits for.
 
     Returns:
-        int: The number of significant digits for the given floating point type.
+        int: The number of mantissa bits for the given floating point type.
+
+    Raises:
+        FloatingTypeError: If the given floating point type is not np.float32 or np.float64.
+
+    Doctests:
+        >>> get_number_of_mantissa_bits(np.float32) == np.finfo(np.float32).nmant
+        True
+        >>> get_number_of_mantissa_bits(np.float64) == np.finfo(np.float64).nmant
+        True
+        >>> get_number_of_mantissa_bits(np.float128) == np.finfo(np.float128).nmant
+        True
     """
 
-    # Initialize the number of significant digits to 0
-    number_of_significant_digits = 0
+    if not isinstance(number_type(1.0), np.floating):
+        raise FloatingTypeError()
 
-    # Get the machine epsilon for the given floating point type
-    machine_epsilon = get_machine_epsilon(eps)
+    number_of_mantissa_bits = 0
 
-    # While the machine epsilon is greater than 0.0
-    while machine_epsilon > eps(0.0):
-        # Divide the machine epsilon by 10.0
-        machine_epsilon /= eps(10.0)
+    while number_type(1.0) + number_type(2.0 ** -(number_of_mantissa_bits + 1)) > number_type(1.0):
+        number_of_mantissa_bits += 1
 
-        # Increment the number of significant digits
-        number_of_significant_digits += 1
-
-    # Return the number of significant digits
-    return number_of_significant_digits
+    return number_of_mantissa_bits
 
 
-def get_max_power_of_number(number: np.float32 | np.float64, eps: np.float32 | np.float64) -> int:
-    """Get the maximum power of a given number for a given floating point type.
+def get_maximum_exponent(number_type: np.floating) -> int:
+    """Get the maximum exponent for a given floating point type.
 
     Args:
-        number (np.float32|np.float64): The number to get the maximum power for.
-        eps (np.float32|np.float64): The floating point type to get the maximum power for.
+        number_type (np.float32|np.float64): The floating point type to get the maximum exponent for.
 
     Returns:
-        int: The maximum power of the given number for the given floating point type.
+        int: The maximum exponent for the given floating point type.
+
+    Raises:
+        FloatingTypeError: If the given floating point type is not np.float32 or np.float64.
+
+    Doctests:
+        >>> get_maximum_exponent(np.float32) == np.finfo(np.float32).maxexp
+        True
+        >>> get_maximum_exponent(np.float64) == np.finfo(np.float64).maxexp
+        True
+        >>> get_maximum_exponent(np.float128) == np.finfo(np.float128).maxexp
+        True
     """
 
-    # Initialize the maximum power to 0
-    max_power_of_number = 0
+    if not isinstance(number_type(1.0), np.floating):
+        raise FloatingTypeError()
 
-    # Get the machine epsilon for the given floating point type
-    machine_epsilon = get_machine_epsilon(eps)
+    maximum_exponent = 0
+    maximum_exponent_value = number_type(1.0)
 
-    # While the machine epsilon is greater than 0.0
-    while machine_epsilon > eps(0.0):
-        # Divide the machine epsilon by the given number
-        machine_epsilon /= number
+    while maximum_exponent_value != number_type("inf"):
+        maximum_exponent_value *= number_type(2.0)
+        maximum_exponent += 1
 
-        # Increment the maximum power
-        max_power_of_number += 1
+    return maximum_exponent
 
-    # Return the maximum power
-    return max_power_of_number
+
+def get_minimum_exponent(number_type: np.floating) -> int:
+    """Get the minimum exponent for a given floating point type.
+
+    Args:
+        number_type (np.float32|np.float64): The floating point type to get the minimum exponent for.
+
+    Returns:
+        int: The minimum exponent for the given floating point type.
+
+    Raises:
+        FloatingTypeError: If the given floating point type is not np.float32 or np.float64.
+
+    Doctests:
+        >>> get_minimum_exponent(np.float32) == np.finfo(np.float32).minexp
+        True
+        >>> get_minimum_exponent(np.float64) == np.finfo(np.float64).minexp
+        True
+        >>> get_minimum_exponent(np.float128) == np.finfo(np.float128).minexp
+        True
+    """
+
+    if not isinstance(number_type(1.0), np.floating):
+        raise FloatingTypeError()
+
+    minimum_exponent = 0
+    minimum_exponent_value = number_type(1.0)
+
+    while minimum_exponent_value != number_type(0.0):
+        minimum_exponent_value /= number_type(2.0)
+        minimum_exponent -= 1
+
+    return minimum_exponent + get_number_of_mantissa_bits(number_type) + 1
 
 
 if __name__ == "__main__":
-    # Get the machine epsilon for single precision
-    epsilon = get_machine_epsilon(np.float32)
-    significant_digits = get_number_of_significant_digits(np.float32)
-    max_power = get_max_power_of_number(np.float32(2.0), np.float32)
+    for np_type in [np.float32, np.float64]:
+        epsilon = get_machine_epsilon(np_type)
+        mantissa_bits = get_number_of_mantissa_bits(np_type)
+        max_exp = get_maximum_exponent(np_type)
+        min_exp = get_minimum_exponent(np_type)
 
-    # Print the machine epsilon for single precision
-    print(f"Machine epsilon for single precision: {epsilon}")
-    print(f"Number of significant digits for single precision: {significant_digits}")
-    print(f"Maximum power of ten for single precision: {max_power}")
+        print(f"{np_type.__name__}:")
+        print(f"Machine epsilon: {epsilon}")
+        print(f"Number of mantissa bits: {mantissa_bits}")
+        print(f"Maximum exponent: {max_exp}")
+        print(f"Minimum exponent: {min_exp}")
+        print()
 
-    # Get the machine epsilon for double precision
-    epsilon = get_machine_epsilon(np.float64)
-    significant_digits = get_number_of_significant_digits(np.float64)
-    max_power = get_max_power_of_number(np.float64(2.0), np.float64)
-
-    # Print the machine epsilon for double precision
-    print(f"Machine epsilon for double precision: {epsilon}")
-    print(f"Number of significant digits for double precision: {significant_digits}")
-    print(f"Maximum power of ten for double precision: {max_power}")
-
-    # Compare four numbers with each other 1, 1+epsilon/2, 1+epsilon, 1+epsilon+epsilon/2
-    print(f"1.0 == 1.0 + epsilon/2.0: / {np.equal(np.float64(1.0), np.float64(1.0) + np.float64(epsilon/2.0))}")
-    print(f"1.0 == 1.0 + epsilon: {np.equal(np.float64(1.0), np.float64(1.0) + np.float64(epsilon))}")
+    np_type = np.float32
+    epsilon = get_machine_epsilon(np_type)
+    print(f"1 < 1 + eps: {np_type(1.0) < np_type(1.0) + epsilon}")
+    print(f"1 == 1 + eps / 2: {np_type(1.0) == np_type(1.0) + epsilon / np_type(2.0)}")
+    print(f"1 < 1 + eps + eps / 2: {np_type(1.0) < np_type(1.0) + epsilon + epsilon / np_type(2.0)}")
+    print(f"1 + eps/2 < 1 + eps: {np_type(1.0) + epsilon / np_type(2.0) < np_type(1.0) + epsilon}")
     print(
-        f"1.0 == 1.0 + epsilon + epsilon/2.0: {np.equal(np.float64(1.0), np.float64(1.0) + np.float64(epsilon + epsilon/2.0))}"
+        f"1 + eps/2 < 1 + eps + eps / 2: {np_type(1.0) + epsilon / np_type(2.0) < np_type(1.0) + epsilon + epsilon / np_type(2.0)}"  # noqa: E501
     )
     print(
-        f"1.0 + epsilon/2.0 == 1.0 + epsilon: {np.equal(np.float64(1.0) + np.float64(epsilon/2.0), np.float64(1.0) + np.float64(epsilon))}"
-    )
-    print(
-        f"1.0 + epsilon/2.0 == 1.0 + epsilon + epsilon/2.0: {np.equal(np.float64(1.0) + np.float64(epsilon/2.0), np.float64(1.0) + np.float64(epsilon + epsilon/2.0))}"
-    )
-    print(
-        f"1.0 + epsilon == 1.0 + epsilon + epsilon/2.0: {np.equal(np.float64(1.0) + np.float64(epsilon), np.float64(1.0) + np.float64(epsilon + epsilon/2.0))}"
+        f"1 + eps < 1 + eps + eps / 2: {np_type(1.0) + epsilon < np_type(1.0) + epsilon + epsilon / np_type(2.0)}"  # noqa: E501
     )

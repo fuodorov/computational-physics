@@ -15,5 +15,8 @@ format: ## autoformat code with black and isort
 	python3 -m isort */*.py
 	python3 -m black */*.py
 
+test: ## run doctests
+	python3 -m doctest */*.py
+
 help: ## Show help message
 	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | sort | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
