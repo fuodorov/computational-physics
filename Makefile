@@ -5,7 +5,7 @@ REPO_ROOT:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 deps: ## install deps (library & development)
 	python3 -m pip install --upgrade pip
-	python3 -m pip install -r requirements.txt
+	python3 -m pip install -r requirements/dev.txt
 
 lint: ## run linters, formatters for current python versions
 	python3 -m flake8 */*.py
