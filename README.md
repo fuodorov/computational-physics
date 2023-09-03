@@ -29,3 +29,16 @@
 </details>
 
 ---
+
+<details>
+<summary>
+<b>Вычислить производную (<a href="lesson_4/diff.py">int.py</a>)</b>
+</summary>
+
+#### Условие
+
+...
+
+</details>
+
+---
