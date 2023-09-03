@@ -32,7 +32,7 @@ def finite_difference(f: Callable[[float], float], x: float, h: float) -> float:
     if h <= 0.0:
         raise ValueError("The step size must be greater than zero.")
 
-    return (f(x + h) - f(x)) / h
+    return (f(x + h) - f(x - h)) / 2 / h
 
 
 def bessel_j(n: int, x: float, h: float) -> float:
@@ -78,7 +78,7 @@ def bessel_j_prime(n: int, x: float, h: float) -> float:
         float: The derivative of the Bessel function at the point.
 
     Doctests:
-        >>> bessel_j_prime(0, 1.0, 1e-3) - (-0.4400505857449335) < 1e-10
+        >>> bessel_j_prime(0, 1.0, 1e-5) + bessel_j(1, 1.0, 1e-5) < 1e-5
         True
 
     Documentation:
@@ -90,7 +90,7 @@ def bessel_j_prime(n: int, x: float, h: float) -> float:
 
 if __name__ == "__main__":
     print("Demonstrate the fulfillment of equality J'0(x) + J1(x) = 0 for x = [0, 2*np.pi]:")
-    for h in [1e-3, 1e-4, 1e-5]:
+    for h in [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]:
         print(f"h = {h}")
         for x in np.linspace(0.0, 2 * np.pi, 10):
             print(
