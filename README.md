@@ -6,7 +6,7 @@
 
 <details>
 <summary>
-<b>Единица в младшем разряде (<a href="lesson_1/ulp.py">ulp.py</a>)</b>
+<b>Найти эпсилон (<a href="lesson_1/ulp.py">ulp.py</a>)</b>
 </summary>
 
 #### Условие
