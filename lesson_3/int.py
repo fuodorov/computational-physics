@@ -83,8 +83,8 @@ def simpson_integrate(f: Callable[[float], float], a: float, b: float, n: int) -
 
     integral = 0.0
 
-    for i in range(n // 2):
-        integral += (f(a + 2 * i * h) + 4.0 * f(a + (2 * i + 1) * h) + f(a + (2 * i + 2) * h)) * h / 3.0
+    for i in range(n):
+        integral += (f(a + i * h) + 4.0 * f(a + (i + 0.5) * h) + f(a + (i + 1) * h)) * h / 6.0
 
     return integral
 
@@ -96,10 +96,11 @@ if __name__ == "__main__":
         print(
             f"trapezoid_integrate(lambda x: 1/(1+x**2), -1.0, 1.0, {n}) = {trapezoid_integrate(lambda x: 1/(1+x**2), -1.0, 1.0, n):.5}"  # noqa: E501
         )
+        print(f"Error: {np.abs(np.pi/2 - trapezoid_integrate(lambda x: 1/(1+x**2), -1.0, 1.0, n)):.5}")
         print(
             f"simpson_integrate(lambda x: 1/(1+x**2), -1.0, 1.0, {n}) = {simpson_integrate(lambda x: 1/(1+x**2), -1.0, 1.0, n):.5}"  # noqa: E501
         )
-        print(f"Error: {np.abs(np.pi/2 - trapezoid_integrate(lambda x: 1/(1+x**2), -1.0, 1.0, n)):.5}")
+        print(f"Error: {np.abs(np.pi/2 - simpson_integrate(lambda x: 1/(1+x**2), -1.0, 1.0, n)):.5}")
         print()
 
     print("Integrating x**(1/3)*np.exp(np.sin(x)) from 0 to 1:")
@@ -108,8 +109,9 @@ if __name__ == "__main__":
         print(
             f"trapezoid_integrate(lambda x: x**(1/3)*np.exp(np.sin(x)), 0.0, 1.0, {n}) = {trapezoid_integrate(lambda x: x**(1/3)*np.exp(np.sin(x)), 0.0, 1.0, n):.5}"  # noqa: E501
         )
+        print(f"Error: {np.abs(1.29587 - trapezoid_integrate(lambda x: x**(1/3)*np.exp(np.sin(x)), 0.0, 1.0, n)):.5}")
         print(
             f"simpson_integrate(lambda x: x**(1/3)*np.exp(np.sin(x)), 0.0, 1.0, {n}) = {simpson_integrate(lambda x: x**(1/3)*np.exp(np.sin(x)), 0.0, 1.0, n):.5}"  # noqa: E501
         )
-        print(f"Error: {np.abs(1.29587 - trapezoid_integrate(lambda x: x**(1/3)*np.exp(np.sin(x)), 0.0, 1.0, n)):.5}")
+        print(f"Error: {np.abs(1.29587 - simpson_integrate(lambda x: x**(1/3)*np.exp(np.sin(x)), 0.0, 1.0, n)):.5}")
         print()
