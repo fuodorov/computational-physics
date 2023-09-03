@@ -16,3 +16,16 @@
 </details>
 
 ---
+
+<details>
+<summary>
+<b>Вычислить интегралы (<a href="lesson_3/int.py">int.py</a>)</b>
+</summary>
+
+#### Условие
+
+...
+
+</details>
+
+---
