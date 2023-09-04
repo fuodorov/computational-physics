@@ -60,3 +60,16 @@
 </details>
 
 ---
+
+<details>
+<summary>
+<b>Решить задачу Коши (<a href="lesson_6/cauchy.py">cauchy.py</a>)</b>
+</summary>
+
+#### Условие
+
+...
+
+</details>
+
+---
