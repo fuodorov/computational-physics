@@ -121,12 +121,6 @@ if __name__ == "__main__":
     )
     print("Solution - https://infopedia.su/10x31a7.html")
     print("Solve tg(x) = x.")
-
-    print("Dihotomy method:")
-    print(dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10))
-
-    print("Newton's method:")
-    print(newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10))
-
-    print("Simple iteration method:")
-    print(simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-10, 1e-10))
+    print(f"Dihotomy method: {dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10):.10f}")
+    print(f"Newton's method: {newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10):.10f}")
+    print(f"Simple iteration method: {simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-3, 1e-10):.10f}")
