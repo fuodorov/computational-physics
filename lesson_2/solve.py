@@ -2,7 +2,6 @@
 Documentation: https://en.wikipedia.org/wiki/Root-finding_algorithm
 """
 
-from time import sleep
 from typing import Callable
 
 import numpy as np
@@ -69,7 +68,7 @@ def simple_iteration(f: Callable[[float], float], x0: float, delta: float, eps: 
 
     Returns:
         float: The root of the function.
-        
+
     Documentation:
         https://en.wikipedia.org/wiki/Fixed-point_iteration
 
@@ -121,6 +120,8 @@ if __name__ == "__main__":
     )
     print("Solution - https://infopedia.su/10x31a7.html")
     print("Solve tg(x) = x.")
-    print(f"Dihotomy method: {dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10):.10f}")
+    print(
+        f"Dihotomy method: {dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10):.10f}"  # noqa: E501
+    )
     print(f"Newton's method: {newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10):.10f}")
     print(f"Simple iteration method: {simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-3, 1e-10):.10f}")
