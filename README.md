@@ -86,3 +86,17 @@
 </details>
 
 ---
+
+<details>
+<summary>
+<b>Решить систему уравнений хищник-жертва (<a href="lesson_7/lotka_volterra.py">lotka_volterra.py</a>)</b>
+</summary>
+
+#### Условие
+
+...
+
+</details>
+
+---
+
