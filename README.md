@@ -63,6 +63,19 @@
 
 <details>
 <summary>
+<b>Провести интерполяционный полином (<a href="lesson_5/polynom.py">polynom.py</a>)</b>
+</summary>
+
+#### Условие
+
+...
+
+</details>
+
+---
+
+<details>
+<summary>
 <b>Решить задачу Коши (<a href="lesson_6/cauchy.py">cauchy.py</a>)</b>
 </summary>
 
