@@ -100,3 +100,16 @@
 
 ---
 
+<details>
+<summary>
+<b>Решить жесткую систему уравнений (<a href="lesson_8/rigid.py">rigid.py</a>)</b>
+</summary>
+
+#### Условие
+
+...
+
+</details>
+
+---
+
