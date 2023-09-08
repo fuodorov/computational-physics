@@ -111,7 +111,6 @@ def newton(f: Callable[[float], float], df: Callable[[float], float], x0: float,
     while abs(x1 - x0) > eps:
         x0 = x1
         x1 = x0 - f(x0) / df(x0)
-        print
 
     return x1
 
