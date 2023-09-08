@@ -2,6 +2,7 @@
 Documentation: https://en.wikipedia.org/wiki/Root-finding_algorithm
 """
 
+import timeit
 from typing import Callable
 
 import numpy as np
@@ -110,6 +111,7 @@ def newton(f: Callable[[float], float], df: Callable[[float], float], x0: float,
     while abs(x1 - x0) > eps:
         x0 = x1
         x1 = x0 - f(x0) / df(x0)
+        print
 
     return x1
 
@@ -119,9 +121,16 @@ if __name__ == "__main__":
         "Find energy of 1/2*Psi(x)'' + U(x)*Psi(x) = E*Psi(x) for the potential U(x) = -U_0, x < a and U(x) = 0, x > a."
     )
     print("Solution - https://infopedia.su/10x31a7.html")
-    print("Solve tg(x) = x.")
+    print("Solve tan(x) = x for x in [pi/2, 3*pi/2]:")
     print(
-        f"Dihotomy method: {dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10):.10f}"  # noqa: E501
+        f"Dihotomy method: {dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10):.10f}",  # noqa: E501
+        f"Time: {timeit.timeit('dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10)', number=10, globals=globals()):.10f}",  # noqa: E501
     )
-    print(f"Newton's method: {newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10):.10f}")
-    print(f"Simple iteration method: {simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-3, 1e-10):.10f}")
+    print(
+        f"Newton's method: {newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10):.10f}",
+        f"Time: {timeit.timeit('newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10)', number=10, globals=globals()):.10f}",  # noqa: E501
+    )
+    print(
+        f"Simple iteration method: {simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-3, 1e-10):.10f}",
+        f"Time: {timeit.timeit('simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-3, 1e-10)', number=10, globals=globals()):.10f}",  # noqa: E501
+    )
