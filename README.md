@@ -113,3 +113,17 @@
 
 ---
 
+<details>
+<summary>
+<b>Вычислить график спектра мощности (<a href="lesson_12/fourier.py">fourier.py</a>)</b>
+</summary>
+
+#### Условие
+
+...
+
+</details>
+
+---
+
+
