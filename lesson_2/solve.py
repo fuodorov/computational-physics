@@ -2,7 +2,6 @@
 Documentation: https://en.wikipedia.org/wiki/Root-finding_algorithm
 """
 
-import timeit
 from typing import Callable
 
 import numpy as np
@@ -15,7 +14,7 @@ class DifferentSignsError(Exception):
         super().__init__(message)
 
 
-def dihotomy(f: Callable[[float], float], a: float, b: float, eps: float) -> float:
+def dihotomy(f: Callable[[float], float], a: float, b: float, eps: float) -> (float, int):
     """
     Find the root of a function using the dihotomy method.
 
@@ -27,12 +26,13 @@ def dihotomy(f: Callable[[float], float], a: float, b: float, eps: float) -> flo
 
     Returns:
         float: The root of the function.
+        int: The number of iterations.
 
     Raises:
         ValueError: The function must have different signs at the bounds of the interval.
 
     Doctests:
-        >>> dihotomy(lambda x: x, -1.0, 1.0, 1e-10) < 1e-10
+        >>> dihotomy(lambda x: x, -1.0, 1.0, 1e-10)[0] < 1e-10
         True
 
     Documentation:
@@ -43,21 +43,25 @@ def dihotomy(f: Callable[[float], float], a: float, b: float, eps: float) -> flo
     if f(a) * f(b) >= 0:
         raise ValueError("The function must have different signs at the bounds of the interval.")
 
+    n = 0
+
     while abs(b - a) > eps:
         c = (a + b) / 2.0
 
         if f(c) == 0.0:
-            return c
+            return c, n
 
         if f(a) * f(c) < 0:
             b = c
         else:
             a = c
 
-    return (a + b) / 2.0
+        n += 1
+
+    return (a + b) / 2.0, n
 
 
-def simple_iteration(f: Callable[[float], float], x0: float, delta: float, eps: float) -> float:
+def simple_iteration(f: Callable[[float], float], x0: float, delta: float, eps: float) -> (float, int):
     """
     Find the root of a function using the simple iteration method.
 
@@ -69,6 +73,7 @@ def simple_iteration(f: Callable[[float], float], x0: float, delta: float, eps: 
 
     Returns:
         float: The root of the function.
+        int: The number of iterations.
 
     Documentation:
         https://en.wikipedia.org/wiki/Fixed-point_iteration
@@ -77,14 +82,16 @@ def simple_iteration(f: Callable[[float], float], x0: float, delta: float, eps: 
 
     x1 = x0 - delta * f(x0)
 
+    n = 0
     while abs(x1 - x0) > eps:
         x0 = x1
         x1 = x0 - delta * f(x0)
+        n += 1
 
-    return x1
+    return x1, n
 
 
-def newton(f: Callable[[float], float], df: Callable[[float], float], x0: float, eps: float) -> float:
+def newton(f: Callable[[float], float], df: Callable[[float], float], x0: float, eps: float) -> (float, int):
     """
     Find the root of a function using the Newton's method.
 
@@ -96,9 +103,10 @@ def newton(f: Callable[[float], float], df: Callable[[float], float], x0: float,
 
     Returns:
         float: The root of the function.
+        int: The number of iterations.
 
     Doctests:
-        >>> newton(lambda x: x**2, lambda x: 2*x, 0.5, 1e-10) < 1e-10
+        >>> newton(lambda x: x**2, lambda x: 2*x, 0.5, 1e-10)[0] < 1e-10
         True
 
     Documentation:
@@ -108,28 +116,41 @@ def newton(f: Callable[[float], float], df: Callable[[float], float], x0: float,
 
     x1 = x0 - f(x0) / df(x0)
 
+    n = 0
     while abs(x1 - x0) > eps:
         x0 = x1
         x1 = x0 - f(x0) / df(x0)
+        n += 1
 
-    return x1
+    return x1, n
 
 
 if __name__ == "__main__":
     print(
         "Find energy of 1/2*Psi(x)'' + U(x)*Psi(x) = E*Psi(x) for the potential U(x) = -U_0, x < a and U(x) = 0, x > a."
     )
-    print("Solution - https://infopedia.su/10x31a7.html")
-    print("Solve tan(x) = x for x in [pi/2, 3*pi/2]:")
-    print(
-        f"Dihotomy method: {dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10):.10f}",  # noqa: E501
-        f"Time: {timeit.timeit('dihotomy(lambda x: np.tan(x) - x, np.pi / 2.0 + 1e-10, 3 * np.pi / 2.0 - 1e-10, 1e-10)', number=10, globals=globals()):.10f}",  # noqa: E501
+    print("Solve ctg(sqrt(1 - x)) = sqrt(1/x - 1):")
+    dihotomy_answer = dihotomy(
+        lambda x: 1.0 / np.tan(np.sqrt(1.0 - x)) - np.sqrt(1.0 / x - 1.0),
+        0.0 + 1e-5,
+        1.0 - 1e-5,
+        1e-5,
     )
-    print(
-        f"Newton's method: {newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10):.10f}",
-        f"Time: {timeit.timeit('newton(lambda x: np.tan(x) - x, lambda x: 1.0 / np.cos(x) ** 2 - 1.0, 4.5, 1e-10)', number=10, globals=globals()):.10f}",  # noqa: E501
+    newton_answer = newton(
+        lambda x: 1.0 / np.tan(np.sqrt(1.0 - x)) - np.sqrt(1.0 / x - 1.0),
+        lambda x: 1.0 / (2.0 * np.tan(np.sqrt(1.0 - x)) ** 2 * np.sqrt(1.0 - x))
+        + 1.0 / (2.0 * np.sqrt(x**3) * (1.0 - x)),
+        0.5,
+        1e-10,
     )
+    simple_iteration_answer = simple_iteration(
+        lambda x: 1.0 / np.tan(np.sqrt(1.0 - x)) - np.sqrt(1.0 / x - 1.0),
+        0.7,
+        1e-1,
+        1e-5,
+    )
+    print(f"Dihotomy method: {dihotomy_answer[0]}", f"Number of iterations: {dihotomy_answer[1]}")
+    print(f"Newton's method: {newton_answer[0]}", f"Number of iterations: {newton_answer[1]}")
     print(
-        f"Simple iteration method: {simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-3, 1e-10):.10f}",
-        f"Time: {timeit.timeit('simple_iteration(lambda x: np.tan(x) - x, 4.5, 1e-3, 1e-10)', number=10, globals=globals()):.10f}",  # noqa: E501
+        f"Simple iteration method: {simple_iteration_answer[0]}", f"Number of iterations: {simple_iteration_answer[1]}"
     )

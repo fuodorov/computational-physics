@@ -1,12 +1,15 @@
 from typing import Callable
-import numpy as np
 
 import matplotlib.pyplot as plt
+import numpy as np
 
-def window_fourier(f: Callable[[float], float], h: Callable[[float], float], a: float, b: float, n: int) -> Callable[[float], float]:
+
+def window_fourier(
+    f: Callable[[float], float], h: Callable[[float], float], a: float, b: float, n: int
+) -> Callable[[float], float]:
     """
     Returns a function that is the windowed Fourier series of f with window h and n terms.
-    
+
     Args:
         f (Callable[[float], float]): The function to approximate.
         h (Callable[[float], float]): The window function.
@@ -30,7 +33,7 @@ if __name__ == "__main__":
     def f(t: float) -> float:
         return np.sin(5.1 * t) + 0.002 * np.sin(25.5 * t) + np.random.uniform(-5, 5)
 
-    def rectangle(t: float) -> float:
+    def rectangle(t: float) -> float:  # pylint: disable=unused-argument
         return 1
 
     def hann(t: float) -> float:
