@@ -1,6 +1,6 @@
-from scipy.optimize import newton_krylov
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.optimize import newton_krylov
 
 if __name__ == "__main__":
     print("Solve the rigid system of equations:")
@@ -27,6 +27,7 @@ if __name__ == "__main__":
     for i in range(n):
         u_e[i + 1] = u_e[i] + h * f(u_e[i], v_e[i])[0]
         v_e[i + 1] = v_e[i] + h * f(u_e[i], v_e[i])[1]
+        print(f'Explicit: {i/(n-1)*100:.2f}%', end='\r')
 
     u_i = np.zeros(n + 1)
     v_i = np.zeros(n + 1)
@@ -40,12 +41,15 @@ if __name__ == "__main__":
         # u_i[i + 1] = u_i[i] + h * (f(u_i[i], v_i[i])[0] + f(y[0], y[1])[0]) / 2
         # v_i[i + 1] = v_i[i] + h * (f(u_i[i], v_i[i])[1] + f(y[0], y[1])[1]) / 2
 
-        # use newton method with one iteration with scipy library
+        # use newton method with scipy library
 
-        y = newton_krylov(lambda y: y - np.array([u_i[i], v_i[i]]) - h * (f(u_i[i], v_i[i]) + f(y[0], y[1])) / 2,
-                          np.array([u_i[i], v_i[i]]))
+        y = newton_krylov(
+            lambda y: y - np.array([u_i[i], v_i[i]]) - h * (f(u_i[i], v_i[i]) + f(y[0], y[1])) / 2,
+            np.array([u_i[i], v_i[i]]),
+        )
         u_i[i + 1] = u_i[i] + h * (f(u_i[i], v_i[i])[0] + f(y[0], y[1])[0]) / 2
         v_i[i + 1] = v_i[i] + h * (f(u_i[i], v_i[i])[1] + f(y[0], y[1])[1]) / 2
+        print(f'Implicit: {i/(n-1)*100:.2f}%', end='\r')
 
     plt.figure(figsize=(10, 5), dpi=200)
     plt.plot(t, u_e, label="u explicit", linestyle="dashed")
@@ -56,4 +60,5 @@ if __name__ == "__main__":
     plt.ylabel("u, v")
     plt.x_lim = (t0, tn)
     plt.legend()
-    plt.savefig("lesson_8/rigid.png")
+    plt.grid()
+    plt.savefig("lesson_8/rigid_1.png")

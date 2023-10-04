@@ -13,6 +13,7 @@ disable=
     E0602, # Undefined variable
     E0611, # No name 'Empty' in module 'google.protobuf.empty_pb2' (no-name-in-module) — proto code creates attributes in runtime and linter goes crazy
     R0205, # Class 'OperationResult' inherits from object, can be safely removed from bases in python3 (useless-object-inheritance)
+    R0801, # Similar lines in 2 files
     R0902, # Too many instance attributes (9/7) (too-many-instance-attributes)
     R0903, # Too few public methods (1/2) (too-few-public-methods)
     R0913, # Too many arguments (6/5) (too-many-arguments)
@@ -20,4 +21,5 @@ disable=
     R1710, # Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
     W0621, # Redefining name 'r' from outer scope (redefined-outer-name)
     W0622, # Redefining built-in 'type' (redefined-builtin)
+    W0640, # Cell variable i defined in loop (cell-var-from-loop)
     W1202, # Use lazy % formatting in logging functions (logging-format-interpolation)
