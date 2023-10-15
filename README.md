@@ -110,7 +110,7 @@
 
 <details>
 <summary>
-<b>Решить жесткую систему уравнений (<a href="lesson_8/rigid.py">rigid.py</a>)</b>
+<b>Решить жесткую систему уравнений (<a href="lesson_8/rigid1.py">rigid1.py</a>)</b>
 </summary>
 
 #### Условие
@@ -123,7 +123,7 @@
 
 <details>
 <summary>
-<b>Методом прогонки решить разностный аналог граничной задачи (<a href="lesson_9/run.py">run.py</a>)</b>
+<b>Методом прогонки решить разностный аналог граничной задачи (<a href="lesson_9/run1.py">run1.py</a>)</b>
 </summary>
 
 #### Условие
