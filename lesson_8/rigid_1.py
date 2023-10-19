@@ -15,7 +15,7 @@ if __name__ == "__main__":
         return np.array([998 * x + 1998 * y, -999 * x - 1999 * y])
 
     def u_exact(t):
-        return 2*np.exp(-t) - np.exp(-1000*t)
+        return 2 * np.exp(-t) - np.exp(-1000 * t)
 
     def v_exact(t):
         return -np.exp(-t) + np.exp(-1000 * t)
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         for i in range(n):
             u_e[i + 1] = u_e[i] + h * f(u_e[i], v_e[i])[0]
             v_e[i + 1] = v_e[i] + h * f(u_e[i], v_e[i])[1]
-            print(f'Explicit: {i/(n-1)*100:.2f}%', end='\r')
+            print(f"Explicit: {i/(n-1)*100:.2f}%", end="\r")
 
         u_i = np.zeros(n + 1)
         v_i = np.zeros(n + 1)
@@ -48,7 +48,7 @@ if __name__ == "__main__":
             )
             u_i[i + 1] = u_i[i] + h * (f(u_i[i], v_i[i])[0] + f(y[0], y[1])[0]) / 2
             v_i[i + 1] = v_i[i] + h * (f(u_i[i], v_i[i])[1] + f(y[0], y[1])[1]) / 2
-            print(f'Implicit: {i/(n-1)*100:.2f}%', end='\r')
+            print(f"Implicit: {i/(n-1)*100:.2f}%", end="\r")
 
         plt.subplot(1, 2, 1)
         plt.plot(t, u_exact(t) - u_e, label=f"delta u with {h=}", linestyle="dashed")
