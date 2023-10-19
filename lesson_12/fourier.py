@@ -31,7 +31,7 @@ if __name__ == "__main__":
     print("for hann window h(t) = 0.5 * (1 - cos(2 * pi * t))")
 
     def f(t: float) -> float:
-        return np.sin(5.1 * t) + 0.002 * np.sin(25.5 * t) + np.random.uniform(-5, 5)
+        return np.sin(5.1 * t) + 0.002 * np.sin(25.5 * t) + np.random.uniform(-0.1, 0.1)
 
     def rectangle(t: float) -> float:  # pylint: disable=unused-argument
         return 1
@@ -39,9 +39,9 @@ if __name__ == "__main__":
     def hann(t: float) -> float:
         return 0.5 * (1 - np.cos(2 * np.pi * t))
 
-    a = 0
-    b = 100 * np.pi
-    n = 1000
+    a = -10
+    b = 10
+    n = 100
 
     w = np.linspace(0, 30, 1000)
 
