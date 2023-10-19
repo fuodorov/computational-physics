@@ -5,24 +5,11 @@ import numpy as np
 
 
 def window_fourier(
-    f: Callable[[float], float], h: Callable[[float], float], a: float, b: float, n: int
+    f: Callable[[float], float],
+    h: Callable[[float], float],
+    T: np.array,
 ) -> Callable[[float], float]:
-    """
-    Returns a function that is the windowed Fourier series of f with window h and n terms.
-
-    Args:
-        f (Callable[[float], float]): The function to approximate.
-        h (Callable[[float], float]): The window function.
-        a (float): The lower bound of the interval.
-        b (float): The upper bound of the interval.
-        n (int): The number of terms in the Fourier series.
-
-    Returns:
-        Callable[[float], float]: The windowed Fourier series of f with window h and n terms.
-
-    """
-    T = np.linspace(a, b, n)
-    return lambda w: sum(f(t) * h(t, T) * np.exp(-1j * w * t) for t in T)
+    return lambda w: sum(f(t) * h(t, T) * np.exp(-1j * w * t) for t in T) / len(T)
 
 
 if __name__ == "__main__":
@@ -41,9 +28,10 @@ if __name__ == "__main__":
         return 0.5 * (1 - 2 * np.cos(2 * np.pi * t / len(T)))
 
     a, b, n = -10, 10, 100
+    T = np.linspace(a, b, n)
     w = np.linspace(0, 30, 1000)
 
-    plt.plot(w, np.abs(window_fourier(f, rectangle, a, b, n)(w)), label="rectangle")
-    plt.plot(w, np.abs(window_fourier(f, hann, a, b, n)(w)), label="hann")
+    plt.plot(w, np.abs(window_fourier(f, rectangle, T)(w)), label="rectangle")
+    plt.plot(w, np.abs(window_fourier(f, hann, T)(w)), label="hann")
     plt.legend()
     plt.savefig("lesson_12/fourier.png")
