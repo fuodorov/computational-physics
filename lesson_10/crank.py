@@ -12,11 +12,13 @@ tau = delta / T
 a, b, c, d, q = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
 p, u, f = np.zeros((n + 1, T + 1)), np.zeros((n + 1, T + 1)), np.zeros((n, T))
 
-for i in range(0, n + 1):
-    p[i][0] = h * i * (1 - i * h / L) ** 2
 
-for j in range(0, T + 1):
-    p[0][j] = 0
+for i, j in np.ndindex(p.shape):
+    if i == 0:
+        p[i][j] = 0
+    elif j == 0:
+        p[i][j] = h * i * (1 - i * h / L) ** 2
+
 
 for m in range(1, T):
     for i in range(1, n):
@@ -27,8 +29,7 @@ for m in range(1, T):
             (p[i + 1][m - 1] - 2 * p[i][m - 1] + p[i - 1][m - 1]) / h**2 + f[i][m - 1] + f[i][m]
         )
 
-    a[1] = 0
-    c[n - 1] = 0
+    a[1], c[n - 1] = 0, 0
 
     for i in range(2, n):
         dzeta = a[i] / b[i - 1]
@@ -52,4 +53,4 @@ surf = ax.plot_surface(x, y, p, cmap=plt.cm.cividis)
 fig.colorbar(surf, shrink=0.5, aspect=10)
 plt.xlabel("x, [cm]")
 plt.ylabel("t, [c]")
-plt.show()
+plt.savefig("lesson_10/crank.png")

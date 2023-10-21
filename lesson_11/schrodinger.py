@@ -39,8 +39,8 @@ def tridiag_matrix_alg(a, b, c, d, n):
 
 
 def inv_iter(y0, a, b, c, n, N, m):
-    psi = []
-    E = []
+    psi, E = [], []
+
     for j in range(0, m):
         d2 = y0.copy()
         for k in range(0, j):
@@ -55,17 +55,15 @@ def inv_iter(y0, a, b, c, n, N, m):
             for k in range(0, j):
                 d2 = d2 - psi[k] * (np.inner(d2, psi[k])) / np.linalg.norm(psi[k])
 
-        E0 = np.linalg.norm(d1) / np.linalg.norm(d2)
-        d2 /= np.linalg.norm(d2)
-        E.append(E0)
-        psi.append(d2)
+        E.append(np.linalg.norm(d1) / np.linalg.norm(d2))
+        psi.append(d2/np.linalg.norm(d2))
     return [E, psi]
 
 
 [E, psi] = inv_iter(y0, a, b, c, n, N, m)
 
 for i in range(0, m):
-    plt.plot(x, psi[i], label="psi" + str(i))
+    plt.plot(x, psi[i], label=f"$\psi_{i + 1}$, E = {E[i].round(3)}")
 
 plt.legend()
-plt.show()
+plt.savefig("lesson_11/schrodinger.png")
