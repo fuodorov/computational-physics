@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def U(x):
@@ -56,7 +56,7 @@ def inv_iter(y0, a, b, c, n, N, m):
                 d2 = d2 - psi[k] * (np.inner(d2, psi[k])) / np.linalg.norm(psi[k])
 
         E.append(np.linalg.norm(d1) / np.linalg.norm(d2))
-        psi.append(d2/np.linalg.norm(d2))
+        psi.append(d2 / np.linalg.norm(d2))
     return [E, psi]
 
 

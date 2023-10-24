@@ -1,16 +1,14 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
-L = 1
-n = 100
-delta = 1
-T = 1000
+L, T = 1, 1
+n, k = 100, 100
 
 h = L / n
-tau = delta / T
+tau = T / k
 
 a, b, c, d, q = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
-p, u, f = np.zeros((n + 1, T + 1)), np.zeros((n + 1, T + 1)), np.zeros((n, T))
+p = np.zeros((n + 1, k + 1))
 
 
 for i, j in np.ndindex(p.shape):
@@ -20,14 +18,12 @@ for i, j in np.ndindex(p.shape):
         p[i][j] = h * i * (1 - i * h / L) ** 2
 
 
-for m in range(1, T):
+for m in range(1, k):
     for i in range(1, n):
         a[i] = -1 * tau / (2 * h**2)
         b[i] = 1 + tau / h**2
         c[i] = -1 * tau / (2 * h**2)
-        d[i] = p[i][m - 1] + tau / 2 * (
-            (p[i + 1][m - 1] - 2 * p[i][m - 1] + p[i - 1][m - 1]) / h**2 + f[i][m - 1] + f[i][m]
-        )
+        d[i] = p[i][m - 1] + tau / 2 * ((p[i + 1][m - 1] - 2 * p[i][m - 1] + p[i - 1][m - 1]) / h**2)
 
     a[1], c[n - 1] = 0, 0
 
@@ -42,9 +38,10 @@ for m in range(1, T):
     for i in range(n - 2, 0, -1):
         p[i][m] = (d[i] - c[i] * p[i + 1][m]) / b[i]
 
+
 y, x = np.meshgrid(
-    np.linspace(0, delta, T + 1),
-    np.linspace(0, 1, n + 1),
+    np.linspace(0, T, k + 1),
+    np.linspace(0, L, n + 1),
 )
 
 fig = plt.figure()
