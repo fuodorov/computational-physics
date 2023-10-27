@@ -10,6 +10,10 @@ tau = T / k
 a, b, c, d, q = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
 p = np.zeros((n + 1, k + 1))
 
+a[0], a[-1] = 0, 0
+b[0], b[-1] = -1 / h, 1
+c[0], c[-1] = 1 / h, 0
+d[0], d[-1] = 0, 0
 
 for i, j in np.ndindex(p.shape):
     if i == 0:
@@ -25,17 +29,15 @@ for m in range(1, k):
         c[i] = -1 * tau / (2 * h**2)
         d[i] = p[i][m - 1] + tau / 2 * ((p[i + 1][m - 1] - 2 * p[i][m - 1] + p[i - 1][m - 1]) / h**2)
 
-    a[1], c[n - 1] = 0, 0
-
-    for i in range(2, n):
+    for i in range(1, n):
         dzeta = a[i] / b[i - 1]
         a[i] = 0
         b[i] -= dzeta * c[i - 1]
         d[i] -= dzeta * d[i - 1]
 
-    p[n - 1][m] = d[n - 1] / b[n - 1]
+    p[-1][m] = d[-1] / b[-1]
 
-    for i in range(n - 2, 0, -1):
+    for i in range(n - 1, -1, -1):
         p[i][m] = (d[i] - c[i] * p[i + 1][m]) / b[i]
 
 
