@@ -33,9 +33,9 @@ for m in range(1, k):
         b[i] -= dzeta * c[i - 1]
         d[i] -= dzeta * d[i - 1]
 
-    p[n][m] = (d[n - 1] / b[n - 1]) / (1 + c[n - 1] / b[n - 1])
+    p[n - 1][m] = d[n - 1] / b[n - 1]
 
-    for i in range(n - 1, 0, -1):
+    for i in range(n - 2, 0, -1):
         p[i][m] = (d[i] - c[i] * p[i + 1][m]) / b[i]
 
 
